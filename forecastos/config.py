@@ -11,8 +11,14 @@ class Settings:
     DEFAULT_CONTEXT_LEN: int = int(os.getenv("DEFAULT_CONTEXT_LEN", "1024"))
     DEFAULT_HORIZON: int = int(os.getenv("DEFAULT_HORIZON", "30"))
 
+    # Serverless Environment Detection
+    IS_VERCEL: bool = os.getenv("VERCEL") is not None or os.getenv("AWS_LAMBDA_FUNCTION_NAME") is not None
+
     # Database Configuration
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./forecastos.db")
+    DATABASE_URL: str = os.getenv(
+        "DATABASE_URL",
+        "sqlite:////tmp/forecastos.db" if (os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME")) else "sqlite:///./forecastos.db"
+    )
 
     # Blockchain Configuration
     EVM_ENABLED: bool = os.getenv("EVM_ENABLED", "false").lower() in ("true", "1", "yes")
@@ -33,7 +39,12 @@ class Settings:
 
     # Storage paths
     BASE_DIR: Path = Path(__file__).resolve().parent.parent
-    AUDIT_LOG_PATH: Path = BASE_DIR / "forecastos_audit_log.json"
+    AUDIT_LOG_PATH: Path = (
+        Path("/tmp/forecastos_audit_log.json")
+        if (os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
+        else BASE_DIR / "forecastos_audit_log.json"
+    )
 
 
 settings = Settings()
+

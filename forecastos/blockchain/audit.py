@@ -48,8 +48,12 @@ class LocalMockProvider(BlockchainAuditProvider):
         return {}
 
     def _write_records(self, records: Dict[str, Any]):
-        with open(self.log_path, "w", encoding="utf-8") as f:
-            json.dump(records, f, indent=2)
+        try:
+            with open(self.log_path, "w", encoding="utf-8") as f:
+                json.dump(records, f, indent=2)
+        except Exception as e:
+            logger.warning(f"Could not write audit log file: {e}")
+
 
     def anchor_forecast(
         self,
