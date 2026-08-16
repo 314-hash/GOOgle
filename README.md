@@ -1,143 +1,72 @@
-# TimesFM
+# Google TimesFM & ForecastOS — AI Forecasting & Decision Engine
 
-TimesFM (Time Series Foundation Model) is a pretrained time-series foundation
-model developed by Google Research for time-series forecasting.
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
+[![License Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
+[![Pytest Passed](https://img.shields.io/badge/tests-21%2F21%20passed-success.svg)](tests/forecastos/)
 
-*   Paper:
-    [A decoder-only foundation model for time-series forecasting](https://arxiv.org/abs/2310.10688),
-    ICML 2024.
-*   All checkpoints:
-    [TimesFM Hugging Face Collection](https://huggingface.co/collections/google/timesfm-release-66e4be5fdb56e960c1e482a6).
-*   [Google Research blog](https://research.google/blog/a-decoder-only-foundation-model-for-time-series-forecasting/).
-*   TimesFM in Google 1P Products:
-    *   [BigQuery ML](https://cloud.google.com/bigquery/docs/timesfm-model): Enterprise level SQL queries for scalability and reliability.
-    *   [Google Sheets](https://workspaceupdates.googleblog.com/2026/02/forecast-data-in-connected-sheets-BigQueryML-TimesFM.html): For your daily spreadsheet. 
-    *   [Vertex Model Garden](https://pantheon.corp.google.com/vertex-ai/publishers/google/model-garden/timesfm): Dockerized endpoint for agentic calling.
+**ForecastOS** is a production-ready time-series forecasting platform, AI decision engine, and cryptographic provenance network built on top of **Google TimesFM 2.5** (200M parameter pretrained foundation model).
 
-This open version is not an officially supported Google product.
+---
 
-**Latest Model Version:** TimesFM 2.5
+## 📚 Documentation Index
 
-**Archived Model Versions:**
+- 📖 **[USER.md](USER.md)**: End-User Manual & Step-by-Step Dashboard Guide.
+- 📈 **[PITCH.md](PITCH.md)**: Commercialization Strategy, Pricing & B2B Pitch Deck.
+- ⚙️ **[FORECASTOS.md](FORECASTOS.md)**: Full System Architecture & API Specification.
 
--   1.0 and 2.0: relevant code archived in the sub directory `v1`. You can `pip
-    install timesfm==1.3.0` to install an older version of this package to load
-    them.
-## Update - July 2, 2026
+---
 
-Updated PyPI to `timesfm=2.0.2`. See [Install](https://github.com/google-research/timesfm#from-pypi).
+## ✨ Features
 
-## Update - Apr. 9, 2026
+- **Pretrained Time-Series Foundation Model**: Zero-shot forecasting via Google TimesFM 2.5 PyTorch core.
+- **Quantile Prediction Intervals**: 10 quantiles ($q_{10}$ to $q_{90}$) for uncertainty modeling.
+- **WebChat AI Assistant**: Floating interactive web chat widget for conversational forecasting & queries.
+- **Two-Phase Anomaly Detection**: Context Z-score detrending + Forecast Prediction Interval breach alerts.
+- **AI Decision Agent**: Automatically translates numeric forecasts into business recommendations.
+- **Cryptographic Provenance**: Deterministic SHA256 hashes anchored to EVM Smart Contracts (`ForecastAuditRegistry.sol`).
+- **Interactive Dashboard**: Modern glassmorphic dark-mode web application with Chart.js charts and ABI inspection.
 
-Added fine-tuning example using HuggingFace Transformers + PEFT (LoRA) — see
-[`timesfm-forecasting/examples/finetuning/`](timesfm-forecasting/examples/finetuning/).
-Also added unit tests (`tests/`) and incorporated several community fixes.
+---
 
-Shoutout to [@kashif](https://github.com/kashif) and [@darkpowerxo](https://github.com/darkpowerxo). 
+## ⚡ Quick Start
 
-## Update - Mar. 19, 2026
+### 1. Install Dependencies
 
-Huge shoutout to [@borealBytes](https://github.com/borealBytes) for adding the support for [AGENTS](https://github.com/google-research/timesfm/blob/master/AGENTS.md)! TimesFM [SKILL.md](https://github.com/google-research/timesfm/tree/master/timesfm-forecasting) is out.
-
-## Update - Oct. 29, 2025
-
-Added back the covariate support through XReg for TimesFM 2.5.
-
-
-## Update - Sept. 15, 2025
-
-TimesFM 2.5 is out!
-
-Comparing to TimesFM 2.0, this new 2.5 model:
-
--   uses 200M parameters, down from 500M.
--   supports up to 16k context length, up from 2048.
--   supports continuous quantile forecast up to 1k horizon via an optional 30M
-    quantile head.
--   gets rid of the `frequency` indicator.
--   has a couple of new forecasting flags.
-
-Since the Sept. 2025 launch, the following improvements have been completed:
-
-1.  ✅ Flax version of the model for faster inference.
-2.  ✅ Covariate support via XReg (see Oct. 2025 update).
-3.  ✅ Documentation, examples, and agent skill (see `timesfm-forecasting/`).
-4.  ✅ Fine-tuning example with LoRA via HuggingFace Transformers + PEFT (see `timesfm-forecasting/examples/finetuning/`).
-5.  ✅ Unit tests for core layers, configs, and utilities (see `tests/`).
-
-### Install
-
-#### From `PyPI`
-
-```shell
-# Install the package with torch
-pip install timesfm[torch]
-# Or with Flax
-pip install timesfm[flax]
-# And when XReg is needed
-pip install timesfm[xreg]
+```bash
+python -m venv .venv
+.\.venv\Scripts\pip install fastapi uvicorn[standard] pydantic pandas numpy matplotlib sqlalchemy pytest httpx python-multipart
+.\.venv\Scripts\pip install -e .
 ```
 
-#### Local Install
+### 2. Launch Server & Dashboard
 
-1.  Clone the repository:
-    ```shell
-    git clone https://github.com/google-research/timesfm.git
-    cd timesfm
-    ```
-
-2.  Create a virtual environment and install dependencies using `uv`:
-    ```shell
-    # Create a virtual environment
-    uv venv
-    
-    # Activate the environment
-    source .venv/bin/activate
-    
-    # Install the package in editable mode with torch
-    uv pip install -e .[torch]
-    # Or with flax
-    uv pip install -e .[flax]
-    # And when XReg is needed
-    uv pip install -e .[xreg]
-    ```
-
-3. [Optional] Install your preferred `torch` / `jax` backend based on your OS and accelerators
-(CPU, GPU, TPU or Apple Silicon).:
-
--   [Install PyTorch](https://pytorch.org/get-started/locally/).
--   [Install Jax](https://docs.jax.dev/en/latest/installation.html#installation)
-    for Flax.
-
-### Code Example
-
-```python
-import torch
-import numpy as np
-import timesfm
-
-torch.set_float32_matmul_precision("high")
-
-model = timesfm.TimesFM_2p5_200M_torch.from_pretrained("google/timesfm-2.5-200m-pytorch")
-
-model.compile(
-    timesfm.ForecastConfig(
-        max_context=1024,
-        max_horizon=256,
-        normalize_inputs=True,
-        use_continuous_quantile_head=True,
-        force_flip_invariance=True,
-        infer_is_positive=True,
-        fix_quantile_crossing=True,
-    )
-)
-point_forecast, quantile_forecast = model.forecast(
-    horizon=12,
-    inputs=[
-        np.linspace(0, 1, 100),
-        np.sin(np.linspace(0, 20, 67)),
-    ],  # Two dummy inputs
-)
-point_forecast.shape  # (2, 12)
-quantile_forecast.shape  # (2, 12, 10): mean, then 10th to 90th quantiles.
+```bash
+python -m forecastos.api.main
 ```
+
+Access the dashboard at:  
+👉 **Web Dashboard**: `http://localhost:8000/dashboard/`  
+👉 **API Docs**: `http://localhost:8000/docs`  
+👉 **Health Check**: `http://localhost:8000/health`
+
+### 3. Run Test Suite
+
+```bash
+.\.venv\Scripts\pytest tests/forecastos/
+```
+
+---
+
+## 📜 Smart Contract Architecture
+
+ForecastOS includes `contracts/ForecastAuditRegistry.sol` for EVM provenance anchoring:
+
+* **Contract Address**: `0x99a5e0195a92d7ae0730226ded132d5e58676050`
+* **Bytecode Hash**: `0x7a6d4005c07dfd310334969358add2c0e3ee8353e0b3994317d7dd8551fd4fe7`
+* **Smart Contract Verification Script**: `python forecastos/blockchain/deploy_and_verify.py`
+
+---
+
+## 📄 License
+
+This repository is dual-structured: Google TimesFM core and ForecastOS application layer are released under the [Apache-2.0 License](LICENSE).

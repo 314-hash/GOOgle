@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ForecastOS — AI Forecasting & Decision Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h2>ForecastOS</h2>
+          <span class="version-tag">TimesFM 2.5</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="overview">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          Overview
+        </button>
+        <button class="nav-item" data-tab="forecast">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          Forecast Engine
+        </button>
+        <button class="nav-item" data-tab="datasets">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          Datasets
+        </button>
+        <button class="nav-item" data-tab="audit">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          Blockchain Audit
+        </button>
+        <button class="nav-item" data-tab="insights">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"></path><path d="M12 2a10 10 0 0 1 10 10h-10V2z"></path></svg>
+          AI Decision Insights
+        </button>
+      </nav>
+
+      <div class="system-status">
+        <div class="status-indicator online"></div>
+        <div class="status-info">
+          <span class="status-label">TimesFM Engine</span>
+          <span class="status-value" id="status-engine-name">Active (Mock/Torch)</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Header Bar -->
+      <header class="top-header">
+        <div class="header-title">
+          <h1 id="page-title">Forecasting Dashboard</h1>
+          <p class="subtitle">AI Time-Series Foundation Model & Cryptographic Decision Engine</p>
+        </div>
+
+        <div class="header-actions">
+          <button class="btn btn-outline" id="btn-quick-sample">Load Sales Sample</button>
+          <button class="btn btn-primary" id="btn-open-forecast-modal">+ New Forecast</button>
+        </div>
+      </header>
+
+      <!-- Natural Language Query Banner -->
+      <section class="nl-query-bar">
+        <div class="nl-input-wrapper">
+          <svg class="nl-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="nl-prompt-input" placeholder="Ask in natural language: e.g. 'Forecast the next 30 days of sales' or 'What happens if demand drops 15%?'">
+          <button class="btn btn-primary btn-sm" id="btn-nl-submit">Generate</button>
+        </div>
+      </section>
+
+      <!-- TAB 1: OVERVIEW -->
+      <div class="tab-content active" id="tab-overview">
+        <div class="bento-grid">
+          <div class="bento-card kpi-card">
+            <span class="kpi-title">Total Forecasts</span>
+            <div class="kpi-value" id="stat-total-forecasts">0</div>
+            <span class="kpi-trend positive">↑ 100% auditable</span>
+          </div>
+
+          <div class="bento-card kpi-card">
+            <span class="kpi-title">Active Model</span>
+            <div class="kpi-value" id="stat-model-name">TimesFM 2.5</div>
+            <span class="kpi-sub">200M Parameters</span>
+          </div>
+
+          <div class="bento-card kpi-card">
+            <span class="kpi-title">Confidence Score</span>
+            <div class="kpi-value" id="stat-confidence">94.5%</div>
+            <span class="kpi-trend positive">Quantile 80% PI</span>
+          </div>
+
+          <div class="bento-card kpi-card">
+            <span class="kpi-title">Blockchain Proofs</span>
+            <div class="kpi-value" id="stat-proofs">0</div>
+            <span class="kpi-sub">SHA256 Cryptographic</span>
+          </div>
+        </div>
+
+        <div class="grid-two-col">
+          <div class="card chart-card">
+            <div class="card-header">
+              <h3>Live Forecast Visualization</h3>
+              <span class="badge" id="chart-badge">30-Day Horizon</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="overviewChart"></canvas>
+            </div>
+          </div>
+
+          <div class="card insights-preview-card">
+            <div class="card-header">
+              <h3>AI Decision Summary</h3>
+              <span class="badge badge-success" id="overview-risk-badge">Low Risk</span>
+            </div>
+            <div class="insights-body">
+              <p class="explanation-text" id="overview-explanation">Run a forecast to view AI-generated decision recommendations.</p>
+              <ul class="recommendations-list" id="overview-recommendations-list">
+                <li class="empty-state">No active recommendations. Click "Load Sales Sample" to try!</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: FORECAST ENGINE -->
+      <div class="tab-content" id="tab-forecast">
+        <div class="card">
+          <div class="card-header">
+            <h3>TimesFM 2.5 Quantile Forecast Plot</h3>
+            <div class="chart-controls">
+              <button class="btn btn-xs btn-outline" id="btn-toggle-quantiles">Toggle Quantile Bands</button>
+            </div>
+          </div>
+          <div class="chart-container-large">
+            <canvas id="detailedForecastChart"></canvas>
+          </div>
+        </div>
+
+        <div class="grid-two-col margin-top">
+          <div class="card">
+            <div class="card-header"><h3>Quantile Distribution Breakdown</h3></div>
+            <div class="table-responsive">
+              <table class="data-table" id="quantiles-table">
+                <thead>
+                  <tr><th>Horizon</th><th>q10</th><th>q20</th><th>Median (q50)</th><th>q80</th><th>q90</th></tr>
+                </thead>
+                <tbody><tr><td colspan="6" class="text-center">No forecast data generated yet.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3>Detected Anomalies</h3></div>
+            <div class="table-responsive">
+              <table class="data-table" id="anomalies-table">
+                <thead>
+                  <tr><th>Date/Step</th><th>Value</th><th>Residual/Z</th><th>Severity</th></tr>
+                </thead>
+                <tbody><tr><td colspan="4" class="text-center">No anomalies detected.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: DATASETS -->
+      <div class="tab-content" id="tab-datasets">
+        <div class="card upload-card">
+          <div class="upload-zone" id="drop-zone">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <h3>Drag & Drop CSV / JSON Dataset</h3>
+            <p>Support columns: <code>timestamp</code> and <code>value</code> (e.g., sales, prices, demand)</p>
+            <input type="file" id="file-input" accept=".csv,.json" hidden>
+            <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">Browse File</button>
+          </div>
+        </div>
+
+        <div class="card margin-top">
+          <div class="card-header"><h3>Uploaded Datasets</h3></div>
+          <div class="table-responsive">
+            <table class="data-table" id="datasets-table">
+              <thead>
+                <tr><th>Name</th><th>Rows</th><th>Frequency</th><th>Start Date</th><th>End Date</th><th>Dataset Hash</th></tr>
+              </thead>
+              <tbody><tr><td colspan="6" class="text-center">No uploaded datasets.</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: BLOCKCHAIN AUDIT -->
+      <div class="tab-content" id="tab-audit">
+        <div class="card audit-card">
+          <div class="card-header">
+            <h3>Cryptographic Forecast Proof</h3>
+            <button class="btn btn-outline btn-sm" id="btn-verify-audit">Verify Hashes</button>
+          </div>
+
+          <div class="audit-details">
+            <div class="audit-field">
+              <span class="audit-label">Dataset Hash (SHA256):</span>
+              <code class="hash-code" id="audit-dataset-hash">0x00000000000000000000000000000000</code>
+            </div>
+            <div class="audit-field">
+              <span class="audit-label">Model Config Hash:</span>
+              <code class="hash-code" id="audit-config-hash">0x00000000000000000000000000000000</code>
+            </div>
+            <div class="audit-field">
+              <span class="audit-label">Forecast Output Hash:</span>
+              <code class="hash-code" id="audit-forecast-hash">0x00000000000000000000000000000000</code>
+            </div>
+            <div class="audit-field highlight">
+              <span class="audit-label">Composite Audit Hash:</span>
+              <code class="hash-code master" id="audit-composite-hash">0x00000000000000000000000000000000</code>
+            </div>
+
+            <div class="blockchain-status-box">
+              <div class="status-row">
+                <span>Blockchain Target:</span>
+                <strong id="audit-chain-name">Local Mock Proof Chain / EVM</strong>
+              </div>
+              <div class="status-row">
+                <span>Transaction Hash:</span>
+                <code class="hash-code" id="audit-tx-hash">0x...</code>
+              </div>
+              <div class="status-row">
+                <span>Status:</span>
+                <span class="badge badge-success" id="audit-status-badge">ANCHORED</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card margin-top">
+          <div class="card-header">
+            <h3>Deployed EVM Smart Contract (ForecastAuditRegistry.sol)</h3>
+            <span class="badge badge-primary" id="sc-network-badge">EVM 0.8.20</span>
+          </div>
+
+          <div class="audit-details">
+            <div class="audit-field">
+              <span class="audit-label">Smart Contract Address:</span>
+              <code class="hash-code master" id="sc-contract-address">0x99a5e0195a92d7ae0730226ded132d5e58676050</code>
+            </div>
+            <div class="audit-field">
+              <span class="audit-label">Admin / Recorder Address:</span>
+              <code class="hash-code" id="sc-admin-address">0x90F79bf6EB2c4f870365E785982E1f101E93b906</code>
+            </div>
+            <div class="audit-field">
+              <span class="audit-label">Bytecode SHA256 Hash:</span>
+              <code class="hash-code" id="sc-bytecode-hash">0x7a6d4005c07dfd310334969358add2c0e3ee8353e0b3994317d7dd8551fd4fe7</code>
+            </div>
+
+            <div class="blockchain-status-box">
+              <div class="status-row">
+                <strong>Smart Contract Interface (ABI Functions):</strong>
+                <button class="btn btn-xs btn-outline" id="btn-copy-abi">Copy JSON ABI</button>
+              </div>
+              <div class="table-responsive" style="margin-top: 0.75rem;">
+                <table class="data-table" id="abi-functions-table">
+                  <thead>
+                    <tr><th>Function Name</th><th>Type</th><th>Inputs / Mutability</th></tr>
+                  </thead>
+                  <tbody id="abi-table-body">
+                    <tr><td><code>anchorForecast</code></td><td>function</td><td>bytes32 forecastId, bytes32 datasetHash... (nonpayable)</td></tr>
+                    <tr><td><code>verifyForecast</code></td><td>function</td><td>bytes32 forecastId, bytes32 datasetHash... (view)</td></tr>
+                    <tr><td><code>getAuditRecord</code></td><td>function</td><td>bytes32 forecastId (view)</td></tr>
+                    <tr><td><code>getTotalAnchoredCount</code></td><td>function</td><td>returns (uint256) (view)</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: AI INSIGHTS -->
+      <div class="tab-content" id="tab-insights">
+        <div class="card">
+          <div class="card-header">
+            <h3>AI Decision Engine Recommendations</h3>
+            <span class="badge badge-primary" id="insights-trend-badge">Trend Analysis</span>
+          </div>
+          <div class="insights-full-body">
+            <p class="explanation-box" id="insights-full-explanation">Generate a forecast to unlock business recommendations.</p>
+            <h4>Recommended Actions:</h4>
+            <div class="recs-grid" id="insights-full-recs">
+              <div class="rec-card empty">Execute a forecast request to see rule-based or LLM recommendations.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- WebChat AI Assistant Floating Widget -->
+  <div class="webchat-container" id="webchat-widget">
+    <button class="webchat-trigger" id="webchat-trigger-btn" title="Open ForecastOS WebChat AI">
+      <div class="trigger-pulse"></div>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+      <span class="unread-dot"></span>
+    </button>
+
+    <div class="webchat-window" id="webchat-window">
+      <div class="webchat-header">
+        <div class="webchat-title">
+          <div class="webchat-avatar">AI</div>
+          <div>
+            <h3>WebChat AI Assistant</h3>
+            <span class="webchat-status">● Live • TimesFM 2.5</span>
+          </div>
+        </div>
+        <button class="webchat-close" id="webchat-close-btn">&times;</button>
+      </div>
+
+      <div class="webchat-messages" id="webchat-messages">
+        <div class="chat-msg assistant">
+          <div class="chat-bubble">
+            👋 Hi! I am your <strong>WebChat AI Assistant</strong> powered by Google TimesFM 2.5.<br><br>Ask me to forecast series, detect anomalies, analyze business risks, or verify smart contract audit proofs on-chain!
+          </div>
+        </div>
+      </div>
+
+      <div class="webchat-chips">
+        <button class="chip-btn" data-query="Forecast the next 30 days of sales">📈 Forecast 30 Days</button>
+        <button class="chip-btn" data-query="Detect anomalies in dataset">🔍 Check Anomalies</button>
+        <button class="chip-btn" data-query="Verify smart contract proof">🛡️ Verify Contract</button>
+      </div>
+
+      <div class="webchat-input-bar">
+        <input type="text" id="webchat-input" placeholder="Type your instruction..." autocomplete="off">
+        <button id="webchat-send-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
