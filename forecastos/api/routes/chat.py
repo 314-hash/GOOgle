@@ -51,7 +51,9 @@ def generate_sample_series():
 
 
 @router.post("", response_model=ChatResponse)
+@router.post("/", response_model=ChatResponse)
 def handle_chat_message(
+
     req: ChatRequest,
     db: Session = Depends(get_db),
 ):
